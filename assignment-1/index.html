@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./themify-icons/themify-icons.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container" id="root">
+      <div id="modal" class="modal">
+        <form onsubmit="submitForm(event)" class="modal-form">
+          <div class="header-modal">
+            <div class="close-icon">
+              <i onClick="closeModal();" class="ti-close"></i>
+            </div>
+            <h2 class="content-header-modal">Add Books</h2>
+          </div>
+          <div class="body-modal">
+            <div class="modal-colum">
+              <label for="name">Name</label>
+              <input class="form-input" type="text" name="name" id="name" />
+            </div>
+            <div class="modal-colum">
+              <label for="author">Author</label>
+              <input class="form-input" type="text" name="author" id="author" />
+            </div>
+            <div class="modal-colum">
+              <label for="cars">Topic</label>
+
+              <select class="form-input" name="cars" id="cars">
+                <option value="Programing">Programing</option>
+                <option value="Database">Database</option>
+                <option value="DevOps">DevOps</option>
+              </select>
+            </div>
+          </div>
+          <div class="footer-modal">
+            <button class="button-add">Create</button>
+          </div>
+        </form>
+      </div>
+      <div id="modal-delete" class="modal-delete">
+        <div class="modal-form-delete">
+          <div class="header-modal">
+            <div class="close-icon">
+              <i onClick="closeModalDelete();" class="ti-close"></i>
+            </div>
+            <h2 class="content-header-modal">Bạn Có muốn xóa không?</h2>
+          </div>
+          <div class="form-button">
+            <button class="button-add" onclick="comfirmDelete()">Xóa</button>
+            <button class="button-no" onclick="closeModalDelete();">
+              Không
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="header">
+        <div class="logo">
+          <h3>Bookstore</h3>
+        </div>
+        <div class="info-user">
+          <div class="avata">
+            <img
+              src="https://iditarodoutsider.files.wordpress.com/2013/02/siberianhusky1.jpg"
+              alt=""
+            />
+          </div>
+          <div class="name">Phạm Ngọc Thắm</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="search">
+          <input
+            type="search"
+            id="search"
+            name="search"
+            placeholder="Nhập tên sách"
+          />
+          <button onClick="openModal();" class="button-add">Add Book</button>
+        </div>
+      </div>
+      <div class="form-table" id="form-table"></div>
+    </div>
+
+    <script src="./index.js"></script>
+    <script>
+      const main = document.getElementById("form-table");
+      const table = document.createElement("table");
+      const search = document.getElementById("search");
+      filter = search.value.toUpperCase();
+      table.classList.add("table");
+      var datas = [
+        {
+          id: 1,
+          name: "Alfreds Futterkiste",
+          author: "	Maria Anders",
+          topic: "Germany",
+        },
+        {
+          id: 2,
+          name: "Alfreds Futterkiste",
+          author: "	Maria Anders",
+          topic: "Germany",
+        },
+      ];
+      if (datas) {
+        table.innerHTML = `
+        <table class="table">
+          <tr>
+            <th>Name</th>
+            <th>Author</th>
+            <th>Topic</th>
+            <th></th>
+          </tr>
+
+        </table>
+          `;
+        dataInTable(datas);
+      }
+
+      function submitForm(event) {
+        event.preventDefault();
+        removeDataOld();
+        var object = {};
+        if (event) {
+          object = {
+            id: datas.length + 1,
+            name: event.target.elements.name.value,
+            author: event.target.elements.author.value,
+            topic: event.target.elements.cars.value,
+          };
+          datas.push(object);
+        }
+        dataInTable(datas);
+        closeModal();
+      }
+      function dataInTable(datas) {
+        for (data of datas) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${data.name}</td>
+            <td>${data.author}</td>
+            <td>${data.topic}</td>
+            <td><button onClick="ActModalDelete(${data.id});" class="delete-book">Delete</button></td>
+          `;
+          table.appendChild(tr);
+        }
+        main.appendChild(table);
+      }
+      function ActModalDelete(e) {
+        openModalDelete();
+        if (e) {
+          datas = datas.filter(function (data) {
+            return e !== data.id;
+          });
+        }
+      }
+      function comfirmDelete() {
+        removeDataOld();
+        dataInTable(datas);
+        closeModalDelete();
+      }
+      function removeDataOld() {
+        const trs = document.querySelectorAll("tr td");
+        for (tr of trs) {
+          if (tr) {
+            tr.remove();
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
